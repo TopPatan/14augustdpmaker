@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stylish Name Letter DP Maker</title>
+  <meta name="description" content="Create your own stylish name letter DP for WhatsApp, Facebook, and Instagram with this free online Stylish Name DP Maker tool. Customize fonts, backgrounds, and download instantly.">
+  <meta name="keywords" content="Stylish Name DP Maker, Name DP Generator, Custom DP Creator, Letter DP for WhatsApp, Stylish Letter Profile Picture">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #e6f5ea;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: #1b5e20;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h2 {
+      margin-top: 20px;
+      font-size: 2rem;
+      color: #1b5e20;
+      animation: slideDown 0.7s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .input-section {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      border: 2px solid #1b5e20;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #1b5e20;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background-color: #2e7d32;
+    }
+
+    #changeDpBtn {
+      margin: 10px 0;
+    }
+
+    #canvas-container {
+      margin: 20px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    canvas {
+      max-width: 90%;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .controls label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    select, input[type="color"] {
+      margin-top: 5px;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #1b5e20;
+    }
+
+    .template-picker {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
+
+    .template-picker img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .template-picker img.selected {
+      border-color: #1b5e20;
+    }
+
+    .template-picker.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Stylish Name Letter DP Maker</h2>
+
+  <div class="input-section">
+    <input type="text" id="nameInput" placeholder="Enter Your Name Letter" oninput="drawText()" />
+    <button id="changeDpBtn">Change DP</button>
+  </div>
+
+  <div class="template-picker hidden" id="templatePicker">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_h_mP4VeAlTry82IOGh4no3gDtsP69X-g7w&s" class="selected" onclick="selectTemplate(this)">
+    <img src="https://png.pngtree.com/png-vector/20220816/ourmid/pngtree-happy-pakistan-independence-day-14-august-free-vector-and-png-png-image_6111336.png" onclick="selectTemplate(this)">
+  </div>
+
+  <div id="canvas-container">
+    <canvas id="dpCanvas" width="400" height="400"></canvas>
+  </div>
+
+  <div class="controls">
+    <label>Font:
+      <select id="fontSelect" onchange="drawText()">
+        <option value="Pacifico">Pacifico</option>
+        <option value="Arial">Arial</option>
+        <option value="Cursive">Cursive</option>
+        <option value="Times New Roman">Times New Roman</option>
+      </select>
+    </label>
+
+    <button id="downloadBtn">
+      <i class="fas fa-download"></i> Download
+    </button>
+    <button id="shareBtn">
+      <i class="fas fa-share-alt"></i> Share
+    </button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('dpCanvas');
+    const ctx = canvas.getContext('2d');
+    let image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.src = document.querySelector('.template-picker img.selected')?.src || '';
+
+    image.onload = () => drawText();
+
+    function drawText() {
+      const text = document.getElementById('nameInput').value;
+      const font = document.getElementById('fontSelect').value;
+      const color = '#1b5e20';
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      if (text.trim()) {
+        ctx.font = `50px ${font}`;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.shadowColor = '#00000055';
+        ctx.shadowBlur = 4;
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 20);
+      }
+    }
+
+    function selectTemplate(imgEl) {
+      document.querySelectorAll('.template-picker img').forEach(img => img.classList.remove('selected'));
+      imgEl.classList.add('selected');
+      image = new Image();
+      image.crossOrigin = 'anonymous';
+      image.src = imgEl.src;
+      image.onload = () => drawText();
+      document.getElementById('templatePicker').classList.add('hidden');
+    }
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      try {
+        const link = document.createElement('a');
+        link.download = 'dp-maker.png';
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        alert('Could not download image. Possible cross-origin issue with template image.');
+        console.error(err);
+      }
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', () => {
+      const shareData = {
+        title: 'Stylish DP Maker',
+        text: 'Create your own stylish name DP with this cool tool!',
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(err => console.error('Share failed:', err));
+      } else {
+        navigator.clipboard.writeText(shareData.url)
+          .then(() => alert('Link copied to clipboard!'))
+          .catch(() => alert('Unable to copy link.'));
+      }
+    });
+
+    document.getElementById('changeDpBtn').addEventListener('click', () => {
+      document.getElementById('templatePicker').classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>
